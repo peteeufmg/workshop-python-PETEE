@@ -3,7 +3,7 @@ Espaço para produção dos conteúdos do workshop de Python do PETEE UFMG - 202
 
 # Sklearn
 
-Sklearn is a Python library for dealing with word pluralization.
+Sklearn is a Python library for Machine Learning.
 
 ## Installation
 
