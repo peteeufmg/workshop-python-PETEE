@@ -23,13 +23,13 @@ from sklearn.neighbors import KNeighborsClassifier
 # ---------- Parte 2: Carregando o dataset ---------- #
 
 iris = load_iris()
-#print(iris.feature_names) # O que foi medido em cada amostra
-#print(iris.data) # Amostras
+print(iris.feature_names) # O que foi medido em cada amostra
+print(iris.data) # Amostras
 # !!!!!!!!!!!!! #
 #---> Cada linha da tabela acima é uma amostra de uma íris <---#
 
-#print(iris.target_names) # Possíveis categorias para cada Iris
-#print(iris.target) # Respostas, que devem ser valores numéricos
+print(iris.target_names) # Possíveis categorias para cada Iris
+print(iris.target) # Respostas, que devem ser valores numéricos
 # !!!!!!!!!!!!! #
 #---> Essas são as categorias possíveis que cada íris se encontra <---#
 
@@ -46,14 +46,14 @@ iris = load_iris()
 
 #---> O Requisito 2 pode ser verificado com: <---#
 
-#print(type(iris.data))
-#print(type(iris.target))
+print(type(iris.data))
+print(type(iris.target))
 # !!!!!!!!!!!!! #
 
 #---> O Requisito 3 pode ser verificado com a função shape: <---#
 
-#print(iris.data.shape)
-#print(iris.target.shape)
+print(iris.data.shape)
+print(iris.target.shape)
 # !!!!!!!!!!!!! #
 
 #---> Para cumprir o Requisito 4, armazenaremos iris.data e iris.target em duas estruturas de dados diferentes, que são chamadas de X(maiúsculo) e y(minúsculo) por convenção <---#
@@ -80,20 +80,20 @@ X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size = 0.3) #
 #---> Crie uma cópia do modelo(o scikit learn chama modelos de estimadores) <---#
 knn = KNeighborsClassifier(n_neighbors = 6) #******************  2  ******************#
 
-# ---------- Parte 6: Treinando e Testando Utilizando o Modelo KNN ---------- #
+# ---------- Parte 6: Treinando e Testando o Modelo KNN ---------- #
 
-#---> Treinando o modelo <---#
+#---> Explicar o que é o fit do modelo <---#
 knn.fit(X_treino,y_treino)
 #---> Agora, esse objeto knn está pronto para realizar previsões no restante dos dados <---#
 
 #---> Vamos prever o resultado de X_teste e comparar esse resultado com o y_teste <---#
-#print(knn.predict(X_teste))
-#print(y_teste)
+print(knn.predict(X_teste))
+print(y_teste)
 # !!!!!!!!!!!!! #
 
 #---> Normalmente, a função accuracy_score é utilizada para medir a precisão de um modelo <---#
-#---> A função accuracy_score recebe como entrada os resultados corretos de cada exemplo e os resultados obtidos pelo modelo <---#
-#---> A função accuracy_score retorna um valor entre 0 e 1 que representa a 
+#---> A função accuracy_score recebe como entrada os resultados corretos de cada amostra e os resultados obtidos pelo modelo <---#
+#---> A função accuracy_score retorna um valor entre 0 e 1 que representa a precisão do modelo <---#
 resultados_corretos = y_teste
 resultados_do_modelo = knn.predict(X_teste)
 precisao = accuracy_score(resultados_corretos, resultados_do_modelo)
@@ -111,8 +111,8 @@ print(precisao)
 #---> Portanto, como temos 150 itens, o valor de n_neighbors deverá ser (raíz de 150)/2, que é 6 <---#
 #---> Essa relação para n_neighbors não estará correta em todas as situações, mas é um bom ponto de partida <---#
 
-# ---------- Parte X ---------- #
+# ---------- Parte 8: Conclusão do Vídeo ---------- #
 
-# ---------- Parte X ---------- #
-
-# ---------- Parte X ---------- #
+#---> Explique o funcionamento geral do código desde o início <---#
+#---> Explique que existem diversos parâmetros que podem ser utilizados na função KNeighborsClassifier, que alteram o comportamento do modelo <---#
+#---> Fale que, nos próximos vídeos, analisaremos novos modelos, como visualizar graficamente os dados e como utilizar bancos de dados externos <---#  
