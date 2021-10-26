@@ -113,6 +113,8 @@ print(precisao)
 
 # ---------- Parte 8: Conclusão do Vídeo ---------- #
 
+
+
 #---> Explique o funcionamento geral do código desde o início <---#
 #---> Explique que existem diversos parâmetros que podem ser utilizados na função KNeighborsClassifier, que alteram o comportamento do modelo <---#
 #---> Fale que, nos próximos vídeos, analisaremos novos modelos, como visualizar graficamente os dados e como utilizar bancos de dados externos <---#  
