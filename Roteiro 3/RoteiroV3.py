@@ -11,8 +11,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 #Survived 	Survival 	0 = No, 1 = Yes
 #Pclass 	Ticket class 	1 = 1st, 2 = 2nd, 3 = 3rd
@@ -32,45 +33,100 @@ from sklearn.model_selection import train_test_split
 # ---------- Parte 3: Ler o arquivo para treino; funções básicas Pandas  ---------- #
 
 #---> Explicar o que é um arquivo csv <---#
+#---> Mostrar o arquivo test.csv no PyCharm <---#
 
-dados_para_treino = pd.read_csv("train.csv")
+dados = pd.read_csv("train.csv")
+#print(dados)
+# !!!!!!!!!!!!! #
 
-print(dados_para_treino)
-#print(dados_para_treino.head())
-#print(dados_para_treino.tail())
-#print(dados_para_treino.tail(10))
-#print(dados_para_treino.describe())
+#---> Mostrar alguns dos recursos do pandas por meio dessas funções <---#
+#print(dados.head())
+# !!!!!!!!!!!!! #
+#print(dados.tail())
+# !!!!!!!!!!!!! #
+#print(dados.tail(10))
+# !!!!!!!!!!!!! #
+#print(dados.describe())
+# !!!!!!!!!!!!! #
+#print(dados.isnull().sum()) # Utilizado para detectar NaN
+# !!!!!!!!!!!!! #
 
-#X_treino = dados_para_treino[["Sex","Age","Pclass"]]
-#print(X_treino)
-X_treino = dados_para_treino[["Pclass","Sex","Age"]]
-#print(X_treino)
+#---> Falar que o Pandas possui mais recursos para análise <---#
 
-y_treino = dados_para_treino["Survived"]
-#print(y_treino)
+# ---------- Parte 4: Preparar os dados ---------- #
 
-X_treino.loc[:,"Sex"] = X_treino["Sex"].map( {"male":0,"female":1} ).astype(int)
-#print(X_treino)
+#---> Ao contrário do dataset Íris, o dataset Titanic possui muito mais colunas. Algumas delas não tem valores numéricos  <---#
+#---> Portanto, precisaremos selecionar as colunas e garantir que nossos dados atendam aos 4 requisitos  <---#
 
+#---> Podemos criar um DataFrame e selecionar colunas específicas da seguinte maneira <---#
+X = pd.DataFrame(dados, columns = ["Pclass","Sex","Age"])
+#print(X)
+# !!!!!!!!!!!!! #
 
-dados_para_teste = pd.read_csv("test.csv")
-X_teste = dados_para_teste[["Pclass","Sex","Age"]]
-
-X_treino["Age"].fillna(X_treino["Age"].median(), inplace = True)
-
-
-#X_teste.loc[:,"Sex"] = X_teste["Sex"].map( {"male":0,"female":1} ).astype(int)
-#print(X_teste)
-#X_teste["Age"].fillna(X_teste["Age"].median(), inplace = True) # Substituindo valores NaN
-#print(X_teste)
+#---> Fazendo o mesmo para a resposta <---#
+y = pd.DataFrame(dados, columns = ["Survived"])
+#print(y)
+# !!!!!!!!!!!!! #
 
 
-X_treino, X_teste, y_treino, y_teste = train_test_split(X_treino, y_treino, test_size = 0.3)
+#---> A coluna "Sex" contém palavras. Podemos transformá-la para valores numéricos com: <---#
+#X["Sex"] = X["Sex"].map( {"male":0,"female":1} ).astype(int)
+X["Sex"].replace({"male":0,"female":1}, inplace=True)
+#print(X)
+# !!!!!!!!!!!!! #
 
-clf = DecisionTreeClassifier(criterion="gini")
-clf.fit(X_treino,y_treino)
+
+#---> A coluna Age possui valores NaN(Not a Number) <---#
+#---> Podemos fazer com que os valores NaN sejam preenchidos com o valor médio da coluna por <---#
+X["Age"].fillna(value = X["Age"].median(), inplace = True)
+#print(X)
+# !!!!!!!!!!!!! #
+
+# ---------- Parte 5: Explicar a árvore de decisões  ---------- #
+
+#---> Mostrar o Slide 3.2: Árvore de Decisões <---#
+
+# ---------- Parte 6: Fazer o treino e o teste, aplicar o modelo árvore de decisões  ---------- #
+
+
+#---> Dividindo o dataset entre treino e teste <---#
+X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size = 0.3, random_state = 5)
+
+#---> Instanciando o modelo e fazendo o fit <---#
+#clf = DecisionTreeClassifier(criterion="gini")
+#clf.fit(X_treino,y_treino)
+
+#---> Analisando agora a precisão do modelo <---#
+#resultados_corretos = y_teste
+#resultados_da_arvore = clf.predict(X_teste)
+#precisao = accuracy_score(resultados_corretos, resultados_da_arvore)
+#print(precisao)
+
+#---> Cuidado com um fenômeno chamado overfitting: a árvore é específica demais para seus dados de treino, em detrimento de seus dados de teste <---#
+#---> Para evitar overfitting, existem 3 parâmetros que podem ser alterados: <---#
+#---> max_depth(Valores de 1 até 32): Representa quão profunda será a árvore. Árvores muito profundas podem causar overfitting <---#
+#---> min_samples_split(Valores inteiros ou float): Quantas amostras são necessárias para se criar um nó de decisão <---#
+#---> min_samples_leaf(Valores inteiros ou float): Quantas amostras são necessárias para se criar uma folha. Valores muito altos causam overfitting <---#
+
+# ---------- Parte 7: Aplicar o modelo Floresta Aleatória  ---------- #
+
+#---> Esse modelo é um conjunto de árvores de decisão <---#
+#---> O resultado final é obtido pela média dos valores obtidos por cada árvore de decisão  <---#
+
+floresta_aleatoria = RandomForestClassifier(criterion = "gini", n_estimators = 100)
+floresta_aleatoria.fit(X_treino,y_treino.values.ravel()) 
+#---> O y do fit é diferente para a floresta aleatória: Ele precisa de um vetor de uma dimensão no y <---#
 
 resultados_corretos = y_teste
-resultados_do_modelo = clf.predict(X_teste)
-precisao = accuracy_score(resultados_corretos, resultados_do_modelo)
+resultados_da_floresta = floresta_aleatoria.predict(X_teste)
+precisao = accuracy_score(resultados_corretos,resultados_da_floresta)
 print(precisao)
+
+#---> Intuitivamente, se aumentarmos muito a quantidade de árvores de decisão geradas, o custo computacional pode ficar muito alto <---#
+
+# ---------- Parte 8: Árvore de Decisões vs Floresta Aleatória  ---------- #
+
+#---> A árvore de decisões tem um custo computacional menor  <---#
+#---> A árvore de decisões é mais intuitiva  <---#
+#---> A floresta aleatória não costuma ter o problema de overfitting  <---#
+#---> A floresta aleatória costuma ter previsões mais precisas  <---#
