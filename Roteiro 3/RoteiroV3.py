@@ -14,6 +14,9 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import export_text
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
 
 #Survived 	Survival 	0 = No, 1 = Yes
 #Pclass 	Ticket class 	1 = 1st, 2 = 2nd, 3 = 3rd
@@ -26,12 +29,16 @@ from sklearn.ensemble import RandomForestClassifier
 #Cabin 	Cabin number 	
 #Embarked 	Port of Embarkation 	C = Cherbourg, Q = Queenstown, S = Southampton
 
+
+#---> Pegar o banco de dados do Kaggle <---#
+
 # ---------- Parte 2: Explicar o problema e a nossa base de dados  ---------- #
 
 #---> Mostrar o Slide 3.1: Dataset Titanic <---#
 
 # ---------- Parte 3: Ler o arquivo para treino; funções básicas Pandas  ---------- #
 
+#---> Explicar sobre o Pandas <---#
 #---> Explicar o que é um arquivo csv <---#
 #---> Mostrar o arquivo test.csv no PyCharm <---#
 
@@ -93,14 +100,14 @@ X["Age"].fillna(value = X["Age"].median(), inplace = True)
 X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size = 0.3, random_state = 5)
 
 #---> Instanciando o modelo e fazendo o fit <---#
-#clf = DecisionTreeClassifier(criterion="gini")
-#clf.fit(X_treino,y_treino)
+clf = DecisionTreeClassifier(criterion="gini")
+clf.fit(X_treino,y_treino)
 
 #---> Analisando agora a precisão do modelo <---#
-#resultados_corretos = y_teste
-#resultados_da_arvore = clf.predict(X_teste)
-#precisao = accuracy_score(resultados_corretos, resultados_da_arvore)
-#print(precisao)
+resultados_corretos = y_teste
+resultados_da_arvore = clf.predict(X_teste)
+precisao = accuracy_score(resultados_corretos, resultados_da_arvore)
+print(precisao)
 
 #---> Cuidado com um fenômeno chamado overfitting: a árvore é específica demais para seus dados de treino, em detrimento de seus dados de teste <---#
 #---> Para evitar overfitting, existem 3 parâmetros que podem ser alterados: <---#
@@ -108,25 +115,11 @@ X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size = 0.3, r
 #---> min_samples_split(Valores inteiros ou float): Quantas amostras são necessárias para se criar um nó de decisão <---#
 #---> min_samples_leaf(Valores inteiros ou float): Quantas amostras são necessárias para se criar uma folha. Valores muito altos causam overfitting <---#
 
-# ---------- Parte 7: Aplicar o modelo Floresta Aleatória  ---------- #
+# ---------- Parte 7: Representação textual(ou gráfica da árvore)  ---------- #
 
-#---> Esse modelo é um conjunto de árvores de decisão <---#
-#---> O resultado final é obtido pela média dos valores obtidos por cada árvore de decisão  <---#
 
-floresta_aleatoria = RandomForestClassifier(criterion = "gini", n_estimators = 100)
-floresta_aleatoria.fit(X_treino,y_treino.values.ravel()) 
-#---> O y do fit é diferente para a floresta aleatória: Ele precisa de um vetor de uma dimensão no y <---#
+fig = plt.figure(figsize=(30,10))
+_ = plot_tree(clf, filled=True)
+plt.show()
 
-resultados_corretos = y_teste
-resultados_da_floresta = floresta_aleatoria.predict(X_teste)
-precisao = accuracy_score(resultados_corretos,resultados_da_floresta)
-print(precisao)
 
-#---> Intuitivamente, se aumentarmos muito a quantidade de árvores de decisão geradas, o custo computacional pode ficar muito alto <---#
-
-# ---------- Parte 8: Árvore de Decisões vs Floresta Aleatória  ---------- #
-
-#---> A árvore de decisões tem um custo computacional menor  <---#
-#---> A árvore de decisões é mais intuitiva  <---#
-#---> A floresta aleatória não costuma ter o problema de overfitting  <---#
-#---> A floresta aleatória costuma ter previsões mais precisas  <---#
